@@ -3,9 +3,9 @@ server:
 
 spring:
         datasource:
-                url: jdbc:postgresql://localhost:5432/db_garcia
-                username: postgres
-                password: ${DB_PW}
+                url: jdbc:postgresql://dpg-cpf3itbtg9os73b72a1g-a/db4java_2lm8
+                username: jose
+                password: Ue0VpOcG3ycPVHpRPHtkaq09kv9YRi6b
                 driver-class-name: org.postgresql.Driver
                 initialize: true
 
