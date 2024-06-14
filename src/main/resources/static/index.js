@@ -10,7 +10,7 @@ const clearForm = () => {
 
 
 window.onload = () => {
-    const url = "http://localhost:8080/api/users"
+    const url = "https://javaapi-d1ez.onrender.com/api/users"
 
     let but = document.querySelector("button")
 
