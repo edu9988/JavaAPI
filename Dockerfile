@@ -8,6 +8,8 @@ COPY src ./src
 
 COPY mvnw .
 
+COPY .env .
+
 COPY .mvn .mvn
 
 RUN chmod u+x mvnw
