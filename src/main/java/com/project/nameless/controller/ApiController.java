@@ -35,7 +35,7 @@ public class ApiController {
 
     @GetMapping("/users")
     public List<Map<String, String>> getAll() {
-	System.out.println( "\nGET /users\n" );
+	System.out.println( "\nGET /users\n200 OK\n" );
 	UserService us = context.getBean( UserService.class );
 	List<Map<String,Object>> list = us.listUsers();
 
@@ -107,17 +107,19 @@ public class ApiController {
 	@PathVariable("id") int id ,
 	@Valid @RequestBody User u
     ){
-	System.out.println( "\nPUT /users/"+id+"\n" );
+	System.out.println( "\nPUT /users/"+id );
 	UserService us = context.getBean( UserService.class );
         Map<String, String> response = new HashMap<>();
 
 	if( us.setUser( id ,u ) ){
+	    System.out.println( "200 OK\n" );
 	    response.put("uid", String.valueOf(id) );
 	    response.put("uname", u.getUname() );
 	    response.put("pwd", u.getPwd() );
 	}
 	else{
-	    response.put("err", "user exists" );
+	    System.out.println( "404 NOT FOUND\n" );
+	    throw new ResponseStatusException( HttpStatus.NOT_FOUND );
 	}
 
         return response;
