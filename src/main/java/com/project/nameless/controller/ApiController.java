@@ -137,4 +137,16 @@ public class ApiController {
 	}
 	System.out.println( "204 NO CONTENT\n" );
     }
+
+    @PostMapping( "/users/auth" )
+    public void authenticate( @Valid @RequestBody User u ){
+	System.out.println( "\nPOST /users/auth" );
+	UserService us = context.getBean( UserService.class );
+
+	if( !us.validateUser( u ) ){
+	    System.out.println( "404 NOT FOUND\n" );
+	    throw new ResponseStatusException( HttpStatus.NOT_FOUND );
+	}
+	System.out.println( "200 OK\n" );
+    }
 }
