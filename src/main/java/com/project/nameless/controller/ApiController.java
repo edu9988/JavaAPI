@@ -22,6 +22,9 @@ import java.util.Map;
 import jakarta.annotation.PostConstruct;
 import javax.validation.Valid;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 @RestController
 @RequestMapping("/api")
 public class ApiController {
@@ -51,18 +54,28 @@ public class ApiController {
 
     @GetMapping("/users/{uid}")
     public Map<String, String> get( @PathVariable("uid") int uid ) {
-	System.out.println( "\nGET /users/"+uid+"\n" );
+	System.out.println( "\nGET /users/"+uid );
 	UserService us = context.getBean( UserService.class );
-	Map<String,Object> user = us.getUser(uid).get(0);
+	List <Map<String,Object>> ls = us.getUser(uid);
+	System.out.println( "SELECT query returned List with "
+	    + ls.size() + " rows" );
+	if( ls.isEmpty() ){
+	    System.out.println( "404 NOT FOUND\n" );
+	    throw new ResponseStatusException( HttpStatus.NOT_FOUND );
+	}
+	else{
+	    System.out.println( "200 OK\n" );
+	    Map<String,Object> user = ls.get(0);
 
-	String uname = (String) user.get("uname");
-	String pwd = (String) user.get("pwd");
+	    String uname = (String) user.get("uname");
+	    String pwd = (String) user.get("pwd");
 
-        Map<String, String> response = new HashMap<>();
-        response.put("uid", String.valueOf(uid) );
-        response.put("uname", uname);
-        response.put("pwd", pwd);
-        return response;
+	    Map<String, String> response = new HashMap<>();
+	    response.put("uid", String.valueOf(uid) );
+	    response.put("uname", uname);
+	    response.put("pwd", pwd);
+	    return response;
+	}
     }
 
     @PostMapping("/users")

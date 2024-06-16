@@ -15,7 +15,7 @@ public class DotenvConfig {
     public void loadEnv() {
 	String dbPw = System.getenv( "DB_PW" );
 	if( dbPw != null ){
-	    System.out.println( "\nVariable DB_PW not null, using it\n" );
+	    System.out.println( "\nVariable DB_PW:"+dbPw+", using it\n" );
 	    System.setProperty( "DB_PW" , dbPw );
 	}
 	else{
