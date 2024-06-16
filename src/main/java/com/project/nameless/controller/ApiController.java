@@ -1,6 +1,7 @@
 package com.project.nameless.controller;
 import com.project.nameless.model.User;
 import com.project.nameless.model.UserService;
+import com.project.nameless.exception.ResourceConflictException;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -79,16 +81,19 @@ public class ApiController {
     }
 
     @PostMapping("/users")
+    @ResponseStatus( HttpStatus.CREATED )
     public Map<String, String> post( @Valid @RequestBody User u ) {
-	System.out.println( "\nPOST /users\n" );
+	System.out.println( "\nPOST /users" );
 	UserService us = context.getBean( UserService.class );
         int id = us.insertUser( u );
         Map<String, String> response = new HashMap<>();
 
 	if( id == -1 ){
-	    response.put("err", "user exists" );
+	    System.out.println( "User exists\n409 CONFLICT\n" );
+	    throw new ResourceConflictException( "User exists" );
 	}
 	else{
+	    System.out.println( "Creating resource\n200 OK\n" );
 	    response.put("uid", String.valueOf(id) );
 	    response.put("uname", u.getUname() );
 	    response.put("pwd", u.getPwd() );
