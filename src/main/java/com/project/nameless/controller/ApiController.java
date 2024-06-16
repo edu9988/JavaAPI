@@ -126,18 +126,15 @@ public class ApiController {
     }
 
     @DeleteMapping("/users/{id}")
-    public Map<String, String> delete( @PathVariable("id") int id ){
-	System.out.println( "\nDELETE /users/"+id+"\n" );
+    @ResponseStatus( HttpStatus.NO_CONTENT )
+    public void delete( @PathVariable("id") int id ){
+	System.out.println( "\nDELETE /users/"+id);
 	UserService us = context.getBean( UserService.class );
-        Map<String, String> response = new HashMap<>();
 
-	if( us.rmUser( id ) ){
-	    response.put("uid", String.valueOf(id) );
+	if( !us.rmUser( id ) ){
+	    System.out.println( "404 NOT FOUND\n" );
+	    throw new ResponseStatusException( HttpStatus.NOT_FOUND );
 	}
-	else{
-	    response.put( "err" , "user does not exist" );
-	}
-
-        return response;
+	System.out.println( "204 NO CONTENT\n" );
     }
 }
