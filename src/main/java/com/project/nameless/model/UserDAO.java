@@ -109,6 +109,29 @@ public class UserDAO{
 	return jdbc.queryForList( sql , obj );
     }
 
+    public boolean isDuplicate( int uid , User u ){
+	String sql = "SELECT EXISTS( SELECT * FROM tb_user "
+	    + "WHERE uname = ? AND uid != ? )";
+
+	Object[] obj = new Object[2];
+	obj[0] = u.getUname();
+	obj[1] = uid;
+
+	int[] types = new int[2];
+	types[0] = Types.VARCHAR;
+	types[1] = Types.INTEGER;
+
+	Boolean ans = jdbc.queryForObject(sql,obj,types,(rs,rowNum) -> 
+	    Boolean.valueOf( rs.getBoolean("exists")));
+
+	if( ans ){
+	    System.out.println( "DAO: User exists" );
+	    return true;
+	}
+	else
+	    return false;
+    }
+
     public boolean setUser( int uid , User u ){
 	String sql = "UPDATE tb_user SET uname = ?,"
 	    + "pwd = ? WHERE uid = ?";
@@ -133,7 +156,7 @@ public class UserDAO{
     }
 
 
-    public boolean hinsertUser( User u ){
+    public User hinsertUser( User u ){
 	String sql = "SELECT EXISTS( SELECT * FROM tb_user " +
 	    "WHERE uname = ?)";
 
@@ -147,8 +170,8 @@ public class UserDAO{
 	    Boolean.valueOf( rs.getBoolean("exists")));
 
 	if( ans ){
-	    System.out.println( "User exists\n" );
-	    return false;
+	    System.out.println( "DAO: User exists\n" );
+	    return null;
 	}
 
 	sql = "INSERT INTO tb_user (uname,pwd) " +
@@ -166,9 +189,25 @@ public class UserDAO{
 		+ "Insert query Exception:"
 		+ e + "\n"
 	    );
-	    return false;
+	    return null;
 	}
-	return true;
+
+	sql = "SELECT * FROM tb_user " +
+	    "WHERE uname = ?";
+
+	obj = new Object[1];
+	obj[0] = u.getUname();
+
+	User newUser = jdbc.queryForObject(
+	    sql , obj , types , (rs,rowNum) -> {
+		User ret = new User();
+		ret.setUid( rs.getInt( "uid" ) );
+		ret.setUname( rs.getString( "uname" ) );
+		ret.setPwd( rs.getString( "pwd" ) );
+		return ret;
+	    }
+	);
+	return newUser;
     }
 
     public boolean hvalidateUser( User u ){
@@ -200,13 +239,36 @@ public class UserDAO{
 	}
     }
 
-    public void hsetUser( int uid , User u ){
-	String sql = "UPDATE tb_user SET pwd = "
+    public User hsetUser( int uid , User u ){
+	String sql = "UPDATE tb_user SET "
+	    + "uname = ? , pwd = "
 	    + "crypt(?,gen_salt('bf',8)) "
 	    + "WHERE uid = ?";
-	Object[] obj = new Object[2];
-	obj[0] = u.getPwd();
-	obj[1] = uid;
-	jdbc.update( sql , obj );
+	Object[] obj = new Object[3];
+	obj[0] = u.getUname();
+	obj[1] = u.getPwd();
+	obj[2] = uid;
+	if( jdbc.update( sql , obj ) != 1 )
+	    return null;
+
+	sql = "SELECT * FROM tb_user " +
+	    "WHERE uid = ?";
+
+	obj = new Object[1];
+	obj[0] = uid;
+
+	int[] types = new int[1];
+	types[0] = Types.INTEGER;
+
+	User newUser = jdbc.queryForObject(
+	    sql , obj , types , (rs,rowNum) -> {
+		User ret = new User();
+		ret.setUid( rs.getInt( "uid" ) );
+		ret.setUname( rs.getString( "uname" ) );
+		ret.setPwd( rs.getString( "pwd" ) );
+		return ret;
+	    }
+	);
+	return newUser;
     }
 }

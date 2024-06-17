@@ -32,9 +32,7 @@ public class ApiController {
 
     @Autowired private ApplicationContext context;
 
-    @GetMapping("/users")
-    public List<Map<String, String>> getAll() {
-	System.out.println( "\nGET /users\n200 OK\n" );
+    public List<Map<String, String>> showAll() {
 	UserService us = context.getBean( UserService.class );
 	List<Map<String,Object>> list = us.listUsers();
 
@@ -53,9 +51,13 @@ public class ApiController {
         return response;
     }
 
-    @GetMapping("/users/{uid}")
-    public Map<String, String> get( @PathVariable("uid") int uid ) {
-	System.out.println( "\nGET /users/"+uid );
+    @GetMapping("/users")
+    public List<Map<String, String>> getAll() {
+	System.out.println( "\nGET /users\n200 OK\n" );
+	return showAll();
+    }
+
+    public Map<String, String> show( int uid ) {
 	UserService us = context.getBean( UserService.class );
 	List <Map<String,Object>> ls = us.getUser(uid);
 	System.out.println( "SELECT query returned List with "
@@ -77,6 +79,12 @@ public class ApiController {
 	    response.put("pwd", pwd);
 	    return response;
 	}
+    }
+
+    @GetMapping("/users/{uid}")
+    public Map<String, String> get( @PathVariable("uid") int uid ) {
+	System.out.println( "\nGET /users/"+uid );
+	return show( uid );
     }
 
     @PostMapping("/users")
@@ -144,6 +152,11 @@ public class ApiController {
 	UserService us = context.getBean( UserService.class );
         Map<String, String> response = new HashMap<>();
 
+	if( us.isDuplicate( id , u ) ){
+	    System.out.println( "409 CONFLICT\n" );
+	    throw new ResourceConflictException( "User exists" );
+	}
+
 	if( us.setUser( id ,u ) ){
 	    System.out.println( "200 OK\n" );
 	    response.put("uid", String.valueOf(id) );
@@ -158,10 +171,7 @@ public class ApiController {
         return response;
     }
 
-    @DeleteMapping("/users/{id}")
-    @ResponseStatus( HttpStatus.NO_CONTENT )
-    public void delete( @PathVariable("id") int id ){
-	System.out.println( "\nDELETE /users/"+id);
+    public void deleteUser( int id ){
 	UserService us = context.getBean( UserService.class );
 
 	if( !us.rmUser( id ) ){
@@ -169,6 +179,13 @@ public class ApiController {
 	    throw new ResponseStatusException( HttpStatus.NOT_FOUND );
 	}
 	System.out.println( "204 NO CONTENT\n" );
+    }
+
+    @DeleteMapping("/users/{id}")
+    @ResponseStatus( HttpStatus.NO_CONTENT )
+    public void delete( @PathVariable("id") int id ){
+	System.out.println( "\nDELETE /users/"+id);
+	deleteUser( id );
     }
 
     @PostMapping( "/users/auth" )
@@ -197,5 +214,108 @@ public class ApiController {
 	    throw new ResponseStatusException( HttpStatus.NOT_FOUND );
 	}
 	System.out.println( "200 OK\n" );
+    }
+
+    @GetMapping("/hash")
+    public List<Map<String, String>> hgetAll() {
+	System.out.println( "\nGET /hash\n200 OK\n" );
+	return showAll();
+    }
+
+    @GetMapping("/hash/{uid}")
+    public Map<String, String> hget( @PathVariable("uid") int uid ) {
+	System.out.println( "\nGET /hash/"+uid );
+	return show( uid );
+    }
+    
+    @PostMapping("/hash")
+    @ResponseStatus( HttpStatus.CREATED )
+    public Map<String, String> hpost( @RequestBody User u ) {
+	System.out.println( "\nPOST /hash" );
+	if( u.getUname() == null ||
+	    u.getUname().isEmpty() ||
+	    u.getUname().contains( " " )
+	){
+	    System.out.println( "uname missing or contains "
+	    + "spaces\n400 BAD REQUEST\n" );
+	    throw new ResponseStatusException( HttpStatus.BAD_REQUEST );
+	}
+	if( u.getPwd() == null ||
+	    u.getPwd().isEmpty() ||
+	    u.getPwd().contains( " " )
+	){
+	    System.out.println( "pwd missing or contains "
+	    + "spaces\n400 BAD REQUEST\n" );
+	    throw new ResponseStatusException( HttpStatus.BAD_REQUEST );
+	}
+
+	UserService us = context.getBean( UserService.class );
+        User newUser = us.hinsertUser( u );
+        Map<String, String> response = new HashMap<>();
+
+	if( newUser == null ){
+	    System.out.println( "User exists\n409 CONFLICT\n" );
+	    throw new ResourceConflictException( "User exists" );
+	}
+	else{
+	    System.out.println( "Creating resource\n200 OK\n" );
+	    response.put("uid", String.valueOf( newUser.getUid() ) );
+	    response.put("uname", newUser.getUname() );
+	    response.put("pwd", newUser.getPwd() );
+	}
+
+        return response;
+    }
+
+    @PutMapping("/hash/{id}")
+    public Map<String, String> hput(
+	@PathVariable("id") int id ,
+	@RequestBody User u
+    ){
+	System.out.println( "\nPUT /hash/"+id );
+	if( u.getUname() == null ||
+	    u.getUname().isEmpty() ||
+	    u.getUname().contains( " " )
+	){
+	    System.out.println( "uname missing or contains "
+	    + "spaces\n400 BAD REQUEST\n" );
+	    throw new ResponseStatusException( HttpStatus.BAD_REQUEST );
+	}
+	if( u.getPwd() == null ||
+	    u.getPwd().isEmpty() ||
+	    u.getPwd().contains( " " )
+	){
+	    System.out.println( "pwd missing or contains "
+	    + "spaces\n400 BAD REQUEST\n" );
+	    throw new ResponseStatusException( HttpStatus.BAD_REQUEST );
+	}
+
+	UserService us = context.getBean( UserService.class );
+	if( us.isDuplicate( id , u ) ){
+	    System.out.println( "409 CONFLICT\n" );
+	    throw new ResourceConflictException( "User exists" );
+	}
+        User editedUser = us.hsetUser( id , u );
+        Map<String, String> response = new HashMap<>();
+
+	if( editedUser == null ){
+	    System.out.println( "404 NOT FOUND\n" );
+	    throw new ResponseStatusException( HttpStatus.NOT_FOUND );
+	}
+	else{
+	    System.out.println( "200 OK\n" );
+	    response.put("uid", String.valueOf( editedUser.getUid() ) );
+	    response.put("uname", editedUser.getUname() );
+	    response.put("pwd", editedUser.getPwd() );
+	}
+
+        return response;
+    }
+
+    @DeleteMapping("/hash/{id}")
+    @ResponseStatus( HttpStatus.NO_CONTENT )
+    public void hdelete( @PathVariable("id") int id ){
+	System.out.println( "\nDELETE /hash/"+id);
+	deleteUser( id );
     }
 }

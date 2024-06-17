@@ -31,11 +31,15 @@ public class UserService{
 	return udao.setUser( uid , u );
     }
 
+    public boolean isDuplicate( int id , User u ){
+	return udao.isDuplicate( id , u );
+    }
+
     public boolean rmUser( int uid ){
 	return udao.rmUser( uid );
     }
     
-    public boolean hinsertUser( User u ){
+    public User hinsertUser( User u ){
 	return udao.hinsertUser( u );
     }
 
@@ -43,7 +47,7 @@ public class UserService{
 	return udao.hvalidateUser( u );
     }
 
-    public void hsetUser( int uid , User u ){
-	udao.hsetUser( uid , u );
+    public User hsetUser( int uid , User u ){
+	return udao.hsetUser( uid , u );
     }
 }
