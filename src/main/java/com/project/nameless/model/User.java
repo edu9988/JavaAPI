@@ -1,14 +1,10 @@
 package com.project.nameless.model;
 
-import javax.validation.constraints.NotNull;
-
 //POJO - Plain Old Java Object
 public class User{
 
     private int uid;
-    @NotNull
     private String uname;
-    @NotNull
     private String pwd;
 
     //Sobrecarga

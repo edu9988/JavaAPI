@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jakarta.annotation.PostConstruct;
-import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -82,8 +81,25 @@ public class ApiController {
 
     @PostMapping("/users")
     @ResponseStatus( HttpStatus.CREATED )
-    public Map<String, String> post( @Valid @RequestBody User u ) {
+    public Map<String, String> post( @RequestBody User u ) {
 	System.out.println( "\nPOST /users" );
+	if( u.getUname() == null ||
+	    u.getUname().isEmpty() ||
+	    u.getUname().contains( " " )
+	){
+	    System.out.println( "uname missing or contains "
+	    + "spaces\n400 BAD REQUEST\n" );
+	    throw new ResponseStatusException( HttpStatus.BAD_REQUEST );
+	}
+	if( u.getPwd() == null ||
+	    u.getPwd().isEmpty() ||
+	    u.getPwd().contains( " " )
+	){
+	    System.out.println( "pwd missing or contains "
+	    + "spaces\n400 BAD REQUEST\n" );
+	    throw new ResponseStatusException( HttpStatus.BAD_REQUEST );
+	}
+
 	UserService us = context.getBean( UserService.class );
         int id = us.insertUser( u );
         Map<String, String> response = new HashMap<>();
@@ -105,9 +121,26 @@ public class ApiController {
     @PutMapping("/users/{id}")
     public Map<String, String> put(
 	@PathVariable("id") int id ,
-	@Valid @RequestBody User u
+	@RequestBody User u
     ){
 	System.out.println( "\nPUT /users/"+id );
+	if( u.getUname() == null ||
+	    u.getUname().isEmpty() ||
+	    u.getUname().contains( " " )
+	){
+	    System.out.println( "uname missing or contains "
+	    + "spaces\n400 BAD REQUEST\n" );
+	    throw new ResponseStatusException( HttpStatus.BAD_REQUEST );
+	}
+	if( u.getPwd() == null ||
+	    u.getPwd().isEmpty() ||
+	    u.getPwd().contains( " " )
+	){
+	    System.out.println( "pwd missing or contains "
+	    + "spaces\n400 BAD REQUEST\n" );
+	    throw new ResponseStatusException( HttpStatus.BAD_REQUEST );
+	}
+
 	UserService us = context.getBean( UserService.class );
         Map<String, String> response = new HashMap<>();
 
@@ -139,8 +172,24 @@ public class ApiController {
     }
 
     @PostMapping( "/users/auth" )
-    public void authenticate( @Valid @RequestBody User u ){
+    public void authenticate( @RequestBody User u ){
 	System.out.println( "\nPOST /users/auth" );
+	if( u.getUname() == null ||
+	    u.getUname().isEmpty() ||
+	    u.getUname().contains( " " )
+	){
+	    System.out.println( "uname missing or contains "
+	    + "spaces\n400 BAD REQUEST\n" );
+	    throw new ResponseStatusException( HttpStatus.BAD_REQUEST );
+	}
+	if( u.getPwd() == null ||
+	    u.getPwd().isEmpty() ||
+	    u.getPwd().contains( " " )
+	){
+	    System.out.println( "pwd missing or contains "
+	    + "spaces\n400 BAD REQUEST\n" );
+	    throw new ResponseStatusException( HttpStatus.BAD_REQUEST );
+	}
 	UserService us = context.getBean( UserService.class );
 
 	if( !us.validateUser( u ) ){
