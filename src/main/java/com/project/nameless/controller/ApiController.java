@@ -117,7 +117,7 @@ public class ApiController {
 	    throw new ResourceConflictException( "User exists" );
 	}
 	else{
-	    System.out.println( "Creating resource\n200 OK\n" );
+	    System.out.println( "Creating resource\n201 CREATED\n" );
 	    response.put("uid", String.valueOf(id) );
 	    response.put("uname", u.getUname() );
 	    response.put("pwd", u.getPwd() );
@@ -258,7 +258,7 @@ public class ApiController {
 	    throw new ResourceConflictException( "User exists" );
 	}
 	else{
-	    System.out.println( "Creating resource\n200 OK\n" );
+	    System.out.println( "Creating resource\n201 CREATED\n" );
 	    response.put("uid", String.valueOf( newUser.getUid() ) );
 	    response.put("uname", newUser.getUname() );
 	    response.put("pwd", newUser.getPwd() );
