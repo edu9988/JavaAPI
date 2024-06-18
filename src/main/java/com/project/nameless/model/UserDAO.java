@@ -80,21 +80,9 @@ public class UserDAO{
 	types[0] = Types.VARCHAR;
 	types[1] = Types.VARCHAR;
 
-	try{
-	    Boolean ans = jdbc.queryForObject(sql,obj,types,(rs,rowNum) -> 
-		Boolean.valueOf( rs.getBoolean("exists")));
-	    if( !ans ){
-		//do something;
-	    }
-	    return ans;
-	}
-	catch( DataAccessException e ){
-	    System.out.println( "\nUserDAO.validateUser():"
-		+ "Select query DataAccessException:"
-		+ e +"\n"
-	    );
-	    return false;
-	}
+	return jdbc.queryForObject(sql,obj,types,(rs,rowNum) -> 
+	    Boolean.valueOf( rs.getBoolean("exists") )
+	);
     }
 
     public List<Map<String, Object>> listUsers() {
@@ -222,21 +210,9 @@ public class UserDAO{
 	types[0] = Types.VARCHAR;
 	types[1] = Types.VARCHAR;
 
-	try{
-	    Boolean ans = jdbc.queryForObject(sql,obj,types,(rs,rowNum) -> 
-		Boolean.valueOf( rs.getBoolean("exists")));
-	    if( !ans ){
-		//do something;
-	    }
-	    return ans;
-	}
-	catch( DataAccessException e ){
-	    System.out.println( "\nUserDAO.hvalidateUser():"
-		+ "Select query DataAccessException:"
-		+ e +"\n"
-	    );
-	    return false;
-	}
+	return jdbc.queryForObject(sql,obj,types,(rs,rowNum) -> 
+	    Boolean.valueOf( rs.getBoolean("exists") )
+	);
     }
 
     public User hsetUser( int uid , User u ){

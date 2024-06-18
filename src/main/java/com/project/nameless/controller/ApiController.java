@@ -318,4 +318,32 @@ public class ApiController {
 	System.out.println( "\nDELETE /hash/"+id);
 	deleteUser( id );
     }
+
+    @PostMapping( "/hash/auth" )
+    public void hauthenticate( @RequestBody User u ){
+	System.out.println( "\nPOST /hash/auth" );
+	if( u.getUname() == null ||
+	    u.getUname().isEmpty() ||
+	    u.getUname().contains( " " )
+	){
+	    System.out.println( "uname missing or contains "
+	    + "spaces\n400 BAD REQUEST\n" );
+	    throw new ResponseStatusException( HttpStatus.BAD_REQUEST );
+	}
+	if( u.getPwd() == null ||
+	    u.getPwd().isEmpty() ||
+	    u.getPwd().contains( " " )
+	){
+	    System.out.println( "pwd missing or contains "
+	    + "spaces\n400 BAD REQUEST\n" );
+	    throw new ResponseStatusException( HttpStatus.BAD_REQUEST );
+	}
+	UserService us = context.getBean( UserService.class );
+
+	if( !us.hvalidateUser( u ) ){
+	    System.out.println( "404 NOT FOUND\n" );
+	    throw new ResponseStatusException( HttpStatus.NOT_FOUND );
+	}
+	System.out.println( "200 OK\n" );
+    }
 }
