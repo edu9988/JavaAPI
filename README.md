@@ -7,9 +7,9 @@ It accesses the same [PostgreSQL](https://www.postgresql.org/) database as my pr
 
 | Action | HTTP | Payload | URL | Description
 | :--- | :--- | :--- | :--- | :---
-| Create | POST | json | <nobr>/api/users</nobr> | Insert user into database
-| Read | GET | - | <nobr>/api/users</nobr> | Get all users from database
-| Read | GET | - | <nobr>/api/users/\<id\></nobr> | Get a single user
-| Update | PUT | json | <nobr>/api/users/\<id\></nobr> | Update user with payload
-| Delete | DELETE | - | <nobr>/api/users/\<id\></nobr> | Remove user from database
-| Authenticate | POST | json | <nobr>/api/users/auth</nobr> | Checks if user and password in payload is in the database
+| Create | POST | json | /api/users | Insert user into database
+| Read | GET | - | /api/users | Get all users from database
+| Read | GET | - | /api/users/\<id\> | Get a single user
+| Update | PUT | json | /api/users/\<id\> | Update user with payload
+| Delete | DELETE | - | /api/users/\<id\> | Remove user from database
+| Authenticate | POST | json | /api/users/auth | Checks if user and password in payload is in the database
