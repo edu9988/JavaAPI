@@ -95,7 +95,7 @@ window.onload = () => {
 	i.onkeyup = () => par.innerHTML = ""
 	form.append( i )
 	const b = document.createElement("button")
-	b.innerHTML = "Submit"
+	b.innerHTML = "Get"
 	b.onclick = e => {
 	    e.preventDefault()
 	    if( i.value.trim().length ){
@@ -173,7 +173,7 @@ window.onload = () => {
 	form.append( p )
 
 	const b = document.createElement("button")
-	b.innerHTML = "Submit"
+	b.innerHTML = "Post"
 	b.onclick = e => {
 	    e.preventDefault()
 	    if( u.value.trim().length && p.value.trim().length ){
@@ -277,7 +277,7 @@ window.onload = () => {
 	form.append( p )
 
 	const b = document.createElement("button")
-	b.innerHTML = "Submit"
+	b.innerHTML = "Put"
 	b.onclick = e => {
 	    e.preventDefault()
 	    if( i.value.trim().length && u.value.trim().length && p.value.trim().length ){
@@ -359,11 +359,14 @@ window.onload = () => {
 	i.onkeyup = () => par.innerHTML = ""
 	form.append( i )
 	const b = document.createElement("button")
-	b.innerHTML = "Submit"
+	b.innerHTML = "Delete"
 	b.onclick = e => {
 	    e.preventDefault()
 	    if( i.value.trim().length ){
-		fetch( `${baseUrl}${endpoint}/${i.value}` , { method:"DELETE" , mode: "cors"  })
+		fetch( `${baseUrl}${endpoint}/${i.value}` , {
+		    method:"DELETE",
+		    mode: "cors"
+		})
 		    .then(r => {
 			if( r.status === 204 ){
 			    clearTab()
@@ -423,7 +426,7 @@ window.onload = () => {
 	form.append( p )
 
 	const b = document.createElement("button")
-	b.innerHTML = "Submit"
+	b.innerHTML = "Authenticate"
 	b.onclick = e => {
 	    e.preventDefault()
 	    if( u.value.trim().length && p.value.trim().length ){
