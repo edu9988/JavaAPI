@@ -9,6 +9,6 @@ It accesses the same [PostgreSQL](https://www.postgresql.org/) database as my pr
 | :--- | :--- | :--- | :--- | :---
 | Create | POST | json | /api/users | Insert user into database
 | Read | GET | - | /api/users | Get all users from database
-| Read | GET | - | /api/users/<id> | Get a single user
-| Update | PUT | json | /api/users/<id> | Update user with payload
-| Delete | DELETE | - | /api/users/<id> | Remove user from database
+| Read | GET | - | /api/users/\<id\> | Get a single user
+| Update | PUT | json | /api/users/\<id\> | Update user with payload
+| Delete | DELETE | - | /api/users/\<id\> | Remove user from database
