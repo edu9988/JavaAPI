@@ -13,3 +13,14 @@ It accesses the same [PostgreSQL](https://www.postgresql.org/) database as my pr
 | Update | PUT | json | /api/users/\<id\> | Update user with payload
 | Delete | DELETE | - | /api/users/\<id\> | Remove user from database
 | Authenticate | POST | json | /api/users/auth | Checks if user and password in payload is in the database
+
+Where json payload is of the form
+
+```javascript
+{
+  "uname"  :  String,
+  "pwd"    :  String
+}
+```
+
+Both `uname` and `pwd` must be not null, non-empty and contain no white spaces.
