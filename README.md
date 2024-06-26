@@ -12,7 +12,7 @@ It accesses the same [PostgreSQL](https://www.postgresql.org/) database as my pr
 | Read | GET | - | /api/users/\<id\> | Get a single user
 | Update | PUT | json | /api/users/\<id\> | Update user with payload
 | Delete | DELETE | - | /api/users/\<id\> | Remove user from database
-| Authenticate | POST | json | /api/users/auth | Checks if user and password in payload is in the database
+| Authenticate | POST | json | /api/users/auth | Checks if user and password match some user in the database
 
 Where json payload is of the form
 
@@ -24,3 +24,9 @@ Where json payload is of the form
 ```
 
 Both `uname` and `pwd` must be not null, non-empty and contain no white spaces.
+
+### Hashed passwords
+
+There is also a hashed version of the API available at `/api/hash`. This version supports all the same operations and functionalities as the standard API described above, with one key difference: the database hashes the provided `pwd` before storing it or comparing it with stored passwords.
+
+This version is designed to explicitly demonstrate how hashed passwords work, which can be particularly useful for educational purposes. It showcases the importance of hashing passwords to enhance security in web applications.
