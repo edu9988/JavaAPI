@@ -1,5 +1,8 @@
 src/main/resources/application-local.yaml
 .env
+run_local.bash
+curl_http_req.bash
+http_json_body.txt
 
 HELP.md
 target/
