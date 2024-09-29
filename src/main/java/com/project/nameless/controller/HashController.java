@@ -31,25 +31,6 @@ public class HashController {
 
     @Autowired private ApplicationContext context;
 
-    public List<Map<String, String>> showAll() {
-	UserService us = context.getBean( UserService.class );
-	List<Map<String,Object>> list = us.listUsers();
-
-	List<Map<String,String>> response = new ArrayList<>();
-	for( Map<String,Object> u : list ){
-	    String i = String.valueOf( u.get("uid") );
-	    String un =  (String) u.get("uname") ;
-	    String p =  (String) u.get("pwd") ;
-	    Map<String, String> entry = new HashMap<>();
-	    entry.put("uid",i);
-	    entry.put("uname",un);
-	    entry.put("pwd",p);
-	    response.add(entry);
-	}
-
-        return response;
-    }
-
     public Map<String, String> show( int uid ) {
 	UserService us = context.getBean( UserService.class );
 	List <Map<String,Object>> ls = us.getUser(uid);
@@ -87,7 +68,22 @@ public class HashController {
     @GetMapping
     public List<Map<String, String>> hgetAll() {
 	System.out.println( "\nGET /hash\n200 OK\n" );
-	return showAll();
+	UserService us = context.getBean( UserService.class );
+	List<Map<String,Object>> list = us.listUsers();
+
+	List<Map<String,String>> response = new ArrayList<>();
+	for( Map<String,Object> u : list ){
+	    String i = String.valueOf( u.get("uid") );
+	    String un =  (String) u.get("uname") ;
+	    String p =  (String) u.get("pwd") ;
+	    Map<String, String> entry = new HashMap<>();
+	    entry.put("uid",i);
+	    entry.put("uname",un);
+	    entry.put("pwd",p);
+	    response.add(entry);
+	}
+
+        return response;
     }
 
     @GetMapping("/{uid}")

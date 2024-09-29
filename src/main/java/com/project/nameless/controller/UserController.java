@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.annotation.PostConstruct;
@@ -31,7 +32,9 @@ public class UserController {
 
     @Autowired private ApplicationContext context;
 
-    public List<Map<String, String>> showAll() {
+    @GetMapping
+    public ResponseEntity<List<Map<String, String>>> getAll() {
+	System.out.println( "\nGET /users\n200 OK\n" );
 	UserService us = context.getBean( UserService.class );
 	List<Map<String,Object>> list = us.listUsers();
 
@@ -47,13 +50,7 @@ public class UserController {
 	    response.add(entry);
 	}
 
-        return response;
-    }
-
-    @GetMapping
-    public List<Map<String, String>> getAll() {
-	System.out.println( "\nGET /users\n200 OK\n" );
-	return showAll();
+        return ResponseEntity.ok(response);
     }
 
     public Map<String, String> show( int uid ) {
